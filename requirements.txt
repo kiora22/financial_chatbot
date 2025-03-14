@@ -1,0 +1,28 @@
+# Frontend
+streamlit==1.26.0
+streamlit-chat==0.1.1
+
+# Backend
+fastapi==0.104.0
+uvicorn==0.23.2
+python-dotenv==1.0.0
+pydantic==2.4.2
+pydantic-settings==2.0.3
+
+# LLM & RAG
+openai==1.2.3
+langchain==0.0.335
+langchain-openai==0.0.2
+chromadb==0.4.18
+tiktoken==0.5.1
+
+# Document Processing
+python-docx==1.0.1
+PyPDF2==3.0.1
+pandas==2.1.1
+openpyxl==3.1.2
+watchdog==3.0.0
+
+# Database
+sqlmodel==0.0.8
+alembic==1.12.1
