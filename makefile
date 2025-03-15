@@ -3,14 +3,6 @@
 # Default environment
 ENV_FILE := .env
 
-# Check if .env file exists, create if not
-ifneq ($(wildcard $(ENV_FILE)),)
-	include $(ENV_FILE)
-else
-	$(shell cp .env.example $(ENV_FILE))
-	include $(ENV_FILE)
-endif
-
 # Build all containers
 build:
 	docker-compose build
@@ -36,6 +28,7 @@ clean:
 
 # Initialize the database
 init-db:
+	if not exist data mkdir data
 	docker-compose run --rm backend python -m utils.init_db
 
 # Run tests
@@ -48,7 +41,7 @@ process-docs:
 
 # Generate sample data
 generate-sample:
-	docker-compose run --rm backend python -m utils.generate_sample_data
+	docker-compose run --rm backend python -c "from utils.init_db import init_database, populate_sample_data; engine = init_database(); populate_sample_data(engine)"
 
 # Create a new user
 create-user:
@@ -57,7 +50,18 @@ create-user:
 	docker-compose run --rm backend python -m utils.create_user --username $$username --password $$password
 
 # Setup the entire project
-setup: build init-db generate-sample run
+setup:
+# Check if .env file exists, create if not
+#	ifneq ($(wildcard $(ENV_FILE)),)
+#		include $(ENV_FILE)
+#	else
+#		$(shell cp .env.example $(ENV_FILE))
+#		include $(ENV_FILE)
+#	endif
+	$(MAKE) build
+	$(MAKE) init-db
+	$(MAKE) generate-sample
+	$(MAKE) run
 
 # Show logs
 logs:

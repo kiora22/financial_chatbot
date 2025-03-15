@@ -1,0 +1,17 @@
+-- Create the category table
+CREATE TABLE category (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE
+);
+
+-- Create the budget_line_item table
+CREATE TABLE budget_line_item (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    category_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    amount REAL NOT NULL,
+    period TEXT CHECK(period IN ('monthly', 'quarterly', 'yearly')) NOT NULL,
+    fiscal_year INTEGER NOT NULL CHECK(fiscal_year >= 2000),
+    notes TEXT,
+    FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE
+);

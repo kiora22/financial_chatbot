@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     
     # Database
     sqlite_db_path: str = os.getenv("SQLITE_DB_PATH", "data/financial_db.sqlite")
-    database_url: str = f"sqlite:///{sqlite_db_path}"
+    database_url: str = os.getenv("DATABASE_URL", f"sqlite:///{sqlite_db_path}")
     
     # Document processing
     max_document_size_mb: int = int(os.getenv("MAX_DOCUMENT_SIZE_MB", "10"))

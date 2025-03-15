@@ -21,10 +21,12 @@ def init_database():
     os.makedirs(os.path.dirname(settings.sqlite_db_path), exist_ok=True)
     
     # Create database engine
-    engine = create_engine(settings.database_url)
+    engine = create_engine(settings.database_url, echo=True)
     
     # Create database schema
     logger.info("Creating database schema")
+    logger.info(f"Database path: {settings.sqlite_db_path}")
+    logger.info(f"Database url: {settings.database_url}")
     SQLModel.metadata.create_all(engine)
     
     logger.info("Database schema created successfully")
