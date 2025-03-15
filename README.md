@@ -16,9 +16,10 @@ This prototype prioritizes simplicity and rapid development, using:
 
 - Chat interface for financial queries
 - Budget management and visualization
-- Real-time budget modifications
 - Document upload and processing for RAG
 - Context-aware financial responses
+- Support for multiple document formats (PDF, DOCX, XLSX, CSV, TXT)
+- Automatic document ingestion and processing
 
 ## Project Structure
 
@@ -29,11 +30,16 @@ financial_assistant/
 |   |-- routers/            # API endpoints
 |   |-- core/               # Business logic
 |-- document_processor/     # Document ingestion service
+|   |-- processors/         # File type processors
 |-- utils/                  # Shared utilities
 |-- config/                 # Configuration
 |-- data/                   # Data storage
+|   |-- document_drop/      # Folder for document ingestion
+|   |-- documents/          # Processed documents
+|   |-- uploads/            # User-uploaded files
+|   |-- vector_store/       # Vector database storage
 |-- dockerfiles/            # Docker configuration
-|-- docker-compose.yml      # Multi-container setup
+|-- docker-compose.yaml     # Multi-container setup
 |-- Makefile                # Build and deployment commands
 ```
 
@@ -53,19 +59,22 @@ financial_assistant/
    cd financial-assistant
    ```
 
-2. Copy the example environment file and edit it
+2. Create an environment file
    ```bash
-   cp .env.example .env
+   touch .env
    ```
 
-3. Edit the `.env` file to add your OpenAI API key
+3. Edit the `.env` file to add your OpenAI API key:
+   ```
+   OPENAI_API_KEY=your-api-key-here
+   ```
 
 ### Running with Docker
 
 Build and start the application:
 
 ```bash
-make setup   # First-time setup: build, initialize database, generate sample data
+make setup   # First-time setup: build, initialize database, run
 ```
 
 Or separately:
@@ -100,18 +109,43 @@ make shell   # Open a shell in a container
 
 ```bash
 make init-db         # Initialize the database
-make generate-sample # Generate sample data
 make test            # Run tests
 make process-docs    # Process documents in the drop folder
 ```
 
+## Working with RAG
+
+### Adding Documents
+
+To add documents to the RAG system:
+
+1. Place document files in the `data/document_drop` folder
+2. The system will automatically process them
+3. Alternatively, use the document upload interface in the frontend
+
+Supported document formats:
+- PDF (.pdf)
+- Microsoft Word (.docx)
+- Microsoft Excel (.xlsx, .xls)
+- CSV (.csv)
+- Plain text (.txt)
+
+### Testing RAG Functionality
+
+1. Access the chat interface
+2. Use the "Test RAG System" button in the sidebar
+3. View test results to verify system functionality
+4. Try asking questions related to your documents
+
 ## Project Status
 
-This project is a prototype in active development and follows a phased implementation approach:
+This project follows a phased implementation approach:
 
-- **Phase 1 (Current)**: Basic infrastructure, API endpoints, UI, and database setup
-- **Phase 2 (Planned)**: RAG implementation, document processing, and budget modification
-- **Phase 3 (Planned)**: Prompt engineering, error handling, and UX refinements
+- **Phase 1 (Completed)**: Basic infrastructure, API endpoints, UI, and database setup
+- **Phase 2 (Current)**: RAG implementation, document processing, and retrieval functionality
+- **Phase 3 (Planned)**: LLM integration, budget modification, and frontend enhancements
+
+For detailed implementation status, see [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 ## License
 

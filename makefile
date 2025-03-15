@@ -49,24 +49,16 @@ create-user:
 	read -p "Password: " password; \
 	docker-compose run --rm backend python -m utils.create_user --username $$username --password $$password
 
-# Setup the entire project
-setup:
-# Check if .env file exists, create if not
-#	ifneq ($(wildcard $(ENV_FILE)),)
-#		include $(ENV_FILE)
-#	else
-#		$(shell cp .env.example $(ENV_FILE))
-#		include $(ENV_FILE)
-#	endif
-	$(MAKE) build
-	$(MAKE) init-db
-	$(MAKE) generate-sample
-	$(MAKE) run
-
 # Show logs
 logs:
 	docker-compose logs -f
 
+# Setup the entire project
+setup:
+	$(MAKE) build
+	$(MAKE) init-db
+	$(MAKE) generate-sample
+	$(MAKE) run
 # Open shell in container
 shell:
 	@read -p "Container (frontend/backend/document_processor): " container; \
