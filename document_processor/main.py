@@ -3,20 +3,31 @@ import sys
 import time
 import asyncio
 import hashlib
+import uuid
 from typing import Dict, List, Any
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+
+# Set up logging
+from config.logging_config import setup_logging
+logger = setup_logging("document_processor")
+
+# Global execution UUID to track unique process executions
+EXECUTION_UUID = str(uuid.uuid4())
+logger.info(f"Process execution UUID: {EXECUTION_UUID}")
 
 # Add the parent directory to the path so we can import from our modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.settings import settings
-from config.logging_config import setup_logging
 from document_processor.processors import get_processor_for_file
 from document_processor.vector_db_client import vector_db_client
 
-# Set up logging
-logger = setup_logging("document_processor")
+
+
+# We'll use this to track which execution is actually running the watcher
+ACTIVE_WATCHER = None
+WATCHER_LOCK_FILE = "/tmp/document_processor_watcher.lock"
 
 
 class DocumentEventHandler(FileSystemEventHandler):
@@ -247,25 +258,63 @@ class DocumentProcessor:
 
 async def process_existing_files():
     """Scan and process existing files without starting the watcher."""
-    processor = DocumentProcessor()
-    await processor.scan_existing_files()
-
+    #processor = DocumentProcessor()
+    #await processor.scan_existing_files()
+    pass
 
 async def main():
     """Main function for the document processor service."""
-    logger.info("Starting document processor service")
+    global ACTIVE_WATCHER, EXECUTION_UUID
+    
+    logger.info(f"Starting document processor service (UUID: {EXECUTION_UUID})")
     logger.info(f"Watching folder: {settings.document_watch_folder}")
+    logger.info(f"Loaded module in PID {os.getpid()}")
     
-    # Initialize the processor
-    processor = DocumentProcessor()
-    
-    # First process any existing files
-    await processor.scan_existing_files()
-    
-    # Then start watching for new files
-    await processor.start_watching()
+    # Check if we're the active watcher
+    try:
+        # Try to read the current active watcher
+        if os.path.exists(WATCHER_LOCK_FILE):
+            with open(WATCHER_LOCK_FILE, 'r') as f:
+                ACTIVE_WATCHER = f.read().strip()
+        
+        # If no active watcher, we become the active watcher
+        if not ACTIVE_WATCHER:
+            ACTIVE_WATCHER = EXECUTION_UUID
+            with open(WATCHER_LOCK_FILE, 'w') as f:
+                f.write(EXECUTION_UUID)
+        
+        # If we're not the active watcher, exit after scanning files
+        if ACTIVE_WATCHER != EXECUTION_UUID:
+            logger.info(f"Another watcher is active (UUID: {ACTIVE_WATCHER}). This instance (UUID: {EXECUTION_UUID}) will only process existing files.")
+            
+            # Process existing files
+            processor = DocumentProcessor()
+            await processor.scan_existing_files()
+            
+            logger.info(f"Finished processing existing files. Exiting instance (UUID: {EXECUTION_UUID}).")
+            return
+        
+        # If we are the active watcher, run the full service
+        logger.info(f"This instance (UUID: {EXECUTION_UUID}) is the active watcher.")
+        
+        # Initialize the processor
+        processor = DocumentProcessor()
+        
+        # First process any existing files
+        await processor.scan_existing_files()
+        
+        # Then start watching for new files
+        await processor.start_watching()
+        
+    except Exception as e:
+        logger.error(f"Error in main: {str(e)}", exc_info=True)
 
 
 if __name__ == "__main__":
     """Run the document processor when script is executed directly."""
-    asyncio.run(main())
+    logger.info(f"__main__ section called (UUID: {EXECUTION_UUID})")
+    
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        logger.error(f"Fatal error in main process: {str(e)}", exc_info=True)

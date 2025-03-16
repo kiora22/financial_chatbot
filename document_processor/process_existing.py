@@ -21,4 +21,5 @@ async def main():
 
 if __name__ == "__main__":
     """Run the script when executed directly."""
+    logger.info("This runs every import")
     asyncio.run(main())

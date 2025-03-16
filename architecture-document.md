@@ -27,9 +27,11 @@ This document outlines the architecture for a financial assistant chatbot protot
 - **Purpose:** Handles prompt generation, financial persona application, and response synthesis.
 - **Technology Choice: OpenAI API (GPT-4o or GPT-4o mini)**
   - Pre-configured financial support persona with domain-specific knowledge
-  - Token budget management (set maximum tokens per interaction)
-  - Error handling for API failures
+  - Token budget management with dynamic truncation and allocation
+  - Robust error handling with retry logic and exponential backoff
   - Response parsing for structured financial outputs
+  - Context injection for RAG-augmented responses
+  - Support for JSON format extraction for budget modifications
 
 ### 2.4 RAG (Retrieval-Augmented Generation) System
 - **Purpose:** Enhances responses with relevant financial data and context.
@@ -284,9 +286,14 @@ financial_assistant/
 - Add financial data visualization
 
 ### Phase 3
-- Refine prompt engineering
-- Implement error handling and validation
-- Add logging and basic analytics
+- Implement full LLM integration with OpenAI API
+  - Add proper API calls with token management
+  - Implement robust error handling and retry logic
+  - Enable structured data extraction for budget modifications
+  - Create specialized financial advisor persona prompts
+- Refine prompt engineering for different query types
+- Enhance error handling and validation
+- Add comprehensive logging with token usage tracking
 - Polish UI/UX for demo purposes
 
 ## 9. Conclusion

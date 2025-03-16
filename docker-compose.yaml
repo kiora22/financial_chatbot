@@ -60,9 +60,10 @@ services:
     networks:
       - shared_network
     environment:
-      - IS_PERSISTENT=TRUE
+      - IS_PERSISTENT=FALSE
       - CHROMA_DB_DIR=/chroma  # Explicitly set the DB directory
-
+      - CHROMA_ENV=production
+      - DEBUG=false
   financial_db:
     image: keinos/sqlite3:latest
     container_name: financial_db

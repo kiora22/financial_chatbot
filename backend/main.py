@@ -52,6 +52,8 @@ if __name__ == "__main__":
         "backend.main:app",
         host=settings.backend_host,
         port=settings.backend_port,
-        reload=settings.debug,
+        reload=False,
+        debug=False,
+        #reload=settings.debug,
         log_level=settings.log_level.lower(),
     )

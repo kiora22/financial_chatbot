@@ -84,6 +84,66 @@ def chat_page():
     except Exception as e:
         st.sidebar.error(f"Backend connection error: {str(e)}")
     
+    # Get available personas from the backend
+    try:
+        # Fetch personas from backend
+        response = requests.get(f"{BACKEND_URL}/api/v1/chat/personas")
+        
+        if response.status_code == 200:
+            personas_data = response.json()
+            persona_options = {}
+            for persona in personas_data:
+                # Convert from snake_case to readable format
+                readable_name = " ".join(word.capitalize() for word in persona.split("_"))
+                if persona == "default":
+                    readable_name = "Default Financial Advisor"
+                elif persona == "conservative":
+                    readable_name = "Conservative Financial Advisor"
+                elif persona == "aggressive":
+                    readable_name = "Aggressive Growth Advisor"
+                elif persona == "retirement":
+                    readable_name = "Retirement Planning Specialist"
+                elif persona == "startup":
+                    readable_name = "Startup & Venture Capital Advisor"
+                persona_options[persona] = readable_name
+        else:
+            # Fallback if API call fails
+            persona_options = {
+                "default": "Default Financial Advisor",
+                "conservative": "Conservative Financial Advisor",
+                "aggressive": "Aggressive Growth Advisor", 
+                "retirement": "Retirement Planning Specialist",
+                "startup": "Startup & Venture Capital Advisor"
+            }
+    except Exception as e:
+        st.sidebar.warning(f"Could not fetch personas: {str(e)}")
+        # Fallback if API call fails
+        persona_options = {
+            "default": "Default Financial Advisor",
+            "conservative": "Conservative Financial Advisor",
+            "aggressive": "Aggressive Growth Advisor", 
+            "retirement": "Retirement Planning Specialist",
+            "startup": "Startup & Venture Capital Advisor"
+        }
+    
+    # Store selected persona in session state
+    if "selected_persona" not in st.session_state:
+        st.session_state.selected_persona = "default"
+    
+    selected_persona = st.sidebar.selectbox(
+        "Advisor Persona",
+        options=list(persona_options.keys()),
+        format_func=lambda x: persona_options[x],
+        index=list(persona_options.keys()).index(st.session_state.selected_persona)
+    )
+    
+    # Update session state if changed
+    if selected_persona != st.session_state.selected_persona:
+        st.session_state.selected_persona = selected_persona
+    
+    # Add a checkbox to enable/disable RAG
+    use_rag = st.sidebar.checkbox("Use Document Knowledge", value=True)
+    
     # Chat interface
     for message in st.session_state.chat_history:
         if message["role"] == "user":
@@ -97,29 +157,55 @@ def chat_page():
         st.session_state.chat_history.append({"role": "user", "content": prompt})
         st.chat_message("user").write(prompt)
         
-        # In Phase 1, we'll simulate the response
-        # In Phase 2, this will call the backend API
+        # Call the backend API for the response
         try:
             # Display thinking message
             with st.chat_message("assistant"):
                 thinking_placeholder = st.empty()
                 thinking_placeholder.write("Thinking...")
                 
-                # Instead of API call, use a mock response for Phase 1
-                mock_response = {
-                    "message": {
-                        "role": "assistant",
-                        "content": "This is a simulated response from the financial assistant. In Phase 2, this will be replaced with actual responses from the backend API."
-                    },
-                    "context": []
+                # Prepare the API request
+                request_data = {
+                    "messages": st.session_state.chat_history,
+                    "user_id": st.session_state.user_id,
+                    "use_rag": use_rag,
+                    "persona": st.session_state.selected_persona
                 }
+                
+                # Make API call
+                response = requests.post(
+                    f"{BACKEND_URL}/api/v1/chat/",
+                    json=request_data,
+                    timeout=30
+                )
+                
+                # Check for errors
+                response.raise_for_status()
+                
+                # Parse the response
+                chat_response = response.json()
+                
+                # Store retrieved context in session state for display
+                if "context" in chat_response and chat_response["context"]:
+                    st.session_state.context = chat_response["context"]
+                else:
+                    st.session_state.context = []
                 
                 # Replace thinking message with response
                 thinking_placeholder.empty()
-                st.write(mock_response["message"]["content"])
+                st.write(chat_response["message"]["content"])
                 
                 # Add assistant message to chat history
-                st.session_state.chat_history.append(mock_response["message"])
+                st.session_state.chat_history.append(chat_response["message"])
+                
+                # Display context sources in the sidebar if available
+                if st.session_state.context:
+                    with st.sidebar.expander("Sources Used", expanded=False):
+                        for idx, source in enumerate(st.session_state.context):
+                            st.markdown(f"**Source {idx+1}** ({source['source']})")
+                            st.write(f"Relevance: {source['score']:.2f}")
+                            st.markdown(f"> {source['content']}")
+                            st.markdown("---")
         except Exception as e:
             st.error(f"Error: {str(e)}")
 

@@ -108,6 +108,11 @@ class VectorDBClient:
                     logger.info(f"Created new collection: {self.collection_name}")
                 
                 logger.info("ChromaDB client successfully initialized")
+
+                logger.info("Deleting all records in collection")
+                existing_ids = self.collection.get()['ids']
+                self.collection.delete(ids = existing_ids)
+
                 break
             
             except Exception as e:
@@ -140,22 +145,32 @@ class VectorDBClient:
         """
         try:
             logger.info(f"Adding document to vector store: {document_id}")
-            
+
             # Check if collection exists
             if self.collection is None:
                 logger.error("ChromaDB collection is not initialized")
                 return False
+
+            # Check if document ID already exists in the collection
+            existing_ids = self.collection.get()['ids']
+            existing_ids = [x.split("_")[0] for x in existing_ids]
+
+            logger.info(f"Existing IDs: {existing_ids}")
             
+            if document_id.split('_')[0] in existing_ids:
+                logger.info(f"Document with ID {document_id} already exists in the vector store. Skipping addition.")
+                return False
+
             # Add document to ChromaDB
             self.collection.add(
                 ids=[document_id],
                 documents=[text],
-                metadatas= None#str(metadata)
+                metadatas=None  # str(metadata)
             )
-            
+
             logger.info(f"Successfully added document: {document_id}")
             return True
-            
+
         except Exception as e:
             logger.error(f"Error adding document to vector store: {str(e)}")
             return False

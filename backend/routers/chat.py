@@ -4,6 +4,8 @@ from typing import List, Optional, Dict, Any
 
 from config.logging_config import setup_logging
 from backend.core.rag_retrieval import rag_retrieval
+from backend.core.llm_processor import llm_processor
+from config.personas import get_available_personas
 
 # Set up logging
 logger = setup_logging("chat_router")
@@ -23,6 +25,7 @@ class ChatRequest(BaseModel):
     messages: List[ChatMessage]
     user_id: str
     use_rag: bool = True  # Whether to use RAG for this request
+    persona: str = "default"  # Persona to use for the response
 
 
 class ContextSource(BaseModel):
@@ -49,9 +52,10 @@ async def process_chat(chat_request: ChatRequest):
         
         # Retrieve context from RAG if enabled
         context = []
+        retrieved_context_raw = []
         if chat_request.use_rag:
             logger.info(f"Using RAG for query: {last_message.content}")
-            retrieved_context = await rag_retrieval.retrieve_context(
+            retrieved_context_raw = await rag_retrieval.retrieve_context(
                 query=last_message.content,
                 top_k=3,
                 threshold=0.7
@@ -63,22 +67,27 @@ async def process_chat(chat_request: ChatRequest):
                     source=item["source"],
                     score=item["score"]
                 )
-                for item in retrieved_context
+                for item in retrieved_context_raw
             ]
             
             logger.info(f"Retrieved {len(context)} context items")
         
-        # In Phase 2, this would use an LLM with the retrieved context
-        # For now, we'll just echo back the query with the context
+        # Convert chat history to format expected by LLM processor
+        formatted_history = []
+        for i, msg in enumerate(chat_request.messages[:-1]):  # Exclude the last message which we handle separately
+            formatted_history.append({
+                "role": msg.role,
+                "content": msg.content
+            })
         
-        context_text = ""
-        if context:
-            context_text = "\n\nRelevant information:\n" + "\n".join([
-                f"- {item.content} (Source: {item.source}, Score: {item.score:.2f})"
-                for item in context
-            ])
-        
-        response_text = f"Echo: {last_message.content}{context_text}"
+        # Generate response using LLM with context and persona
+        logger.info(f"Generating response using LLM processor with persona: {chat_request.persona}")
+        response_text = await llm_processor.generate_response(
+            user_message=last_message.content,
+            chat_history=formatted_history if formatted_history else None,
+            retrieved_context=retrieved_context_raw if retrieved_context_raw else None,
+            persona=chat_request.persona
+        )
         
         logger.info(f"Returning chat response for user_id: {chat_request.user_id}")
         return ChatResponse(
@@ -107,6 +116,33 @@ async def get_chat_history(user_id: str):
     except Exception as e:
         logger.error(f"Error retrieving chat history: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error retrieving chat history: {str(e)}")
+
+
+@router.post("/parse-budget-request", response_model=Dict[str, Any])
+async def parse_budget_request(request: Dict[str, str]):
+    """
+    Parse a budget modification request into structured data.
+    
+    Args:
+        request: A dictionary containing the user's budget request
+        
+    Returns:
+        Structured budget modification data
+    """
+    try:
+        logger.info("Received budget parsing request")
+        
+        if "text" not in request:
+            raise HTTPException(status_code=400, detail="Missing 'text' field in request")
+        
+        # Parse the budget request
+        parsed_request = await llm_processor.parse_budget_modification(request["text"])
+        
+        logger.info(f"Successfully parsed budget request: {parsed_request}")
+        return parsed_request
+    except Exception as e:
+        logger.error(f"Error parsing budget request: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error parsing budget request: {str(e)}")
 
 
 @router.get("/test-rag", response_model=Dict[str, Any])
@@ -143,3 +179,53 @@ async def test_rag():
     except Exception as e:
         logger.error(f"Error testing RAG functionality: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error testing RAG functionality: {str(e)}")
+
+
+@router.get("/test-llm", response_model=Dict[str, str])
+async def test_llm():
+    """Test endpoint for LLM functionality."""
+    try:
+        logger.info("Testing LLM functionality")
+        
+        # Generate a response with a simple test query
+        test_query = "What are some ways to optimize a marketing budget?"
+        
+        # Get test context from RAG
+        retrieved_context = await rag_retrieval.retrieve_context(
+            query=test_query,
+            top_k=2,
+            threshold=0.6
+        )
+        
+        # Generate response
+        response_text = await llm_processor.generate_response(
+            user_message=test_query,
+            retrieved_context=retrieved_context
+        )
+        
+        return {
+            "status": "success",
+            "query": test_query,
+            "response": response_text
+        }
+        
+    except Exception as e:
+        logger.error(f"Error testing LLM functionality: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error testing LLM functionality: {str(e)}")
+
+
+@router.get("/personas", response_model=List[str])
+async def get_personas():
+    """Get available chatbot personas."""
+    try:
+        logger.info("Retrieving available chatbot personas")
+        
+        # Get personas from configuration
+        personas = get_available_personas()
+        
+        logger.info(f"Found {len(personas)} available personas")
+        return personas
+        
+    except Exception as e:
+        logger.error(f"Error retrieving personas: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error retrieving personas: {str(e)}")
