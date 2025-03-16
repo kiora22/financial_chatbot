@@ -1,0 +1,128 @@
+# Financial Policies and Procedures
+
+## Budget Allocations for Fiscal Year 2025
+
+### Overview
+
+This document outlines the budget allocation policies for fiscal year 2025, including the process for requesting modifications, approval requirements, and documentation standards.
+
+### Budget Categories
+
+The company budget is organized into the following main categories:
+
+1. **Marketing** - $120,000 annual allocation
+   - Social Media Advertising: $40,000
+   - Content Production: $30,000
+   - Events and Sponsorships: $50,000
+
+2. **Operations** - $180,000 annual allocation
+   - Office Rent: $96,000
+   - Utilities: $24,000
+   - Office Supplies: $12,000
+   - Maintenance: $48,000
+
+3. **Research & Development** - $250,000 annual allocation
+   - Software Development: $180,000
+   - Hardware and Equipment: $40,000
+   - Research Materials: $30,000
+
+### Budget Modification Procedures
+
+#### Modification Types
+
+1. **Minor Adjustments** - Changes within a category that do not exceed 10% of the category allocation
+2. **Major Adjustments** - Changes that exceed 10% of the category allocation or transfers between categories
+
+#### Approval Requirements
+
+1. **Minor Adjustments**
+   - Department Manager approval required
+   - Documentation submitted to Finance Department
+
+2. **Major Adjustments**
+   - Department Manager approval
+   - Finance Director approval
+   - CEO approval for adjustments exceeding $25,000
+   - Board approval for adjustments exceeding $100,000
+
+#### Required Documentation
+
+All budget modification requests must include:
+
+1. Current budget allocation
+2. Proposed modification amount
+3. Detailed justification for the change
+4. Expected impact on business outcomes
+5. Risk assessment of not making the change
+
+### Quarterly Budget Review
+
+Budget performance will be reviewed quarterly with the following schedule:
+- Q1 Review: April 15, 2025
+- Q2 Review: July 15, 2025
+- Q3 Review: October 15, 2025
+- Q4 Review: January 15, 2026
+
+### Emergency Allocations
+
+For unforeseen circumstances requiring immediate financial resources:
+1. Department manager may request emergency allocation
+2. CEO can approve up to $50,000 in emergency funds
+3. Board notification required within 48 hours
+4. Full documentation required within 5 business days
+
+## Expense Reimbursement Policy
+
+### Authorized Expenses
+
+The following expenses are eligible for reimbursement when incurred for business purposes:
+
+1. Travel expenses
+   - Airfare (economy class only)
+   - Lodging (up to $200 per night)
+   - Meals (up to $75 per day)
+   - Ground transportation
+
+2. Business meals and entertainment
+   - Client meetings
+   - Team building events
+   - Conference networking events
+
+3. Office supplies and equipment
+   - Under $500 can be purchased with manager approval
+   - Over $500 requires director approval
+
+### Submission Process
+
+1. All expenses must be submitted within 30 days of being incurred
+2. Receipts are required for all expenses over $25
+3. Expense reports must be approved by immediate supervisor
+4. Reimbursement will be processed within 10 business days
+
+## Financial Reporting Standards
+
+### Internal Reports
+
+1. Monthly financial statements to be distributed by the 10th of each month
+2. Quarterly budget vs. actual reports by the 15th following quarter end
+3. Annual financial projections updated quarterly
+
+### External Reporting
+
+1. Annual financial statements prepared in accordance with GAAP
+2. Quarterly investor updates
+3. Tax filings according to statutory deadlines
+
+## Compliance Requirements
+
+All financial activities must comply with:
+1. Generally Accepted Accounting Principles (GAAP)
+2. Internal control procedures
+3. Regulatory requirements applicable to the industry
+4. Corporate governance best practices
+
+## Revision History
+
+- January 15, 2025: Initial policy created
+- February 28, 2025: Updated budget allocation amounts
+- March 10, 2025: Added emergency allocation procedures

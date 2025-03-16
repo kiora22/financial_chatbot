@@ -1,0 +1,14 @@
+Subject: Q2 Update – AI Platform Integration Over Budget
+3rd February 2025
+Body: All,
+
+Quick heads-up that the AI Platform Integration with our CRM system has exceeded its initial budget by 27%. The main driver was higher-than-expected consulting costs and the need to upgrade our API gateway for compatibility.
+
+Initial budget: $2.2M
+Revised forecast: $2.8M
+
+We’re exploring cost mitigation options, including phasing out lower-priority features and reducing reliance on external vendors for Phase 2. Detailed breakdown will be shared in the Finance Ops call on Wednesday.
+
+Regards,
+Daniel Mercer
+VP Technology Strategy

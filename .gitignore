@@ -26,10 +26,7 @@ ENV/
 .env
 
 # Data
-data/documents/
-data/uploads/
-data/document_drop/
-data/financial_db.sqlite
+
 data/vector_store/
 
 # Logs

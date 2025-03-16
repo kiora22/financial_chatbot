@@ -1,0 +1,15 @@
+Subject: Action Required – Rising Costs on SaaS Licenses
+12th December 2024
+Body: Hi everyone,
+
+Just got notice from WorkStream360 – our primary project management SaaS – that their enterprise tier pricing is increasing by 20% starting July 1st. This will raise our annual spend from $1.1M to ~$1.32M.
+
+Options on the table:
+
+Negotiate a multi-year lock-in to limit increases (vendor open to this).
+Evaluate switching to Asana Enterprise – initial analysis suggests $950K/year but requires user retraining and integration development ($200K one-time).
+Would appreciate quick feedback so we can advise Procurement.
+
+Cheers,
+Tom Reynolds
+IT Vendor Management

@@ -1,0 +1,18 @@
+Chief Technology Officer (CTO) – Jessica Liu
+│
+├── VP Technology Strategy – Daniel Mercer
+│   ├── Head of Emerging Tech – Nina Clarke
+│   └── Head of Data Science – Ravi Mehta
+│
+├── Director, Infrastructure Programs – Anjali Patel
+│   ├── Infrastructure Operations Manager – Liam Zhang
+│   └── Network & Data Center Lead – Priya Nair
+│
+├── Head of Technology Operations – Elena Cho
+│   ├── HPC & Compute Lead – Martin Schulz
+│   └── Storage & Backup Manager – Sofia Diaz
+│
+├── IT Vendor Management – Tom Reynolds
+│   └── SaaS Contracts Lead – Rachel Evans
+│
+└── Finance Liaison – Amanda Green (Dual report to CFO and CTO)

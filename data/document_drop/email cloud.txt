@@ -1,0 +1,13 @@
+Subject: AWS vs Azure Cost Comparison for FY25 Infrastructure Strategy
+date: 1st, March 2025
+Body: Hi team,
+
+After the initial cost analysis, it appears that sticking with AWS for our core infrastructure will lead to a 12% increase in OpEx over the next 18 months due to higher data egress fees and premium support charges. Azure has proposed a 3-year Enterprise Agreement with a 15% discount on compute and storage, which could save us approximately $1.4M annually.
+
+However, migrating existing workloads will incur a one-time cost of $850K, including re-architecting legacy systems and staff training.
+
+Finance has asked us to finalize our recommendation by the end of Q1. We need to weigh short-term expenses vs long-term savings. Let's discuss during Thursday’s IT steering meeting.
+
+Best,
+Jessica Liu
+CTO Office

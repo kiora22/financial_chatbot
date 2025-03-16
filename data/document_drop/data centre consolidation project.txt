@@ -1,0 +1,14 @@
+Subject: Timeline Shift – Data Center Consolidation Project
+4th March 2025
+Body: Team,
+
+Due to delays in securing hardware for the new Sydney data center, the consolidation timeline has been pushed back by 6 weeks. This affects our ability to decommission two legacy sites in Brisbane, which were projected to save $500K per month in operational costs starting in May.
+
+We’re assessing interim measures, but it’s likely we’ll incur additional running costs of ~$750K over the delay period. I’ve flagged this to Finance for the Q3 forecast update.
+
+Let’s regroup on mitigation options tomorrow.
+
+Thanks,
+Anjali Patel
+Director, Infrastructure Programs
+
