@@ -2,6 +2,8 @@
 
 A financial assistant chatbot prototype that utilizes Retrieval-Augmented Generation (RAG) to deliver context-aware responses. The system acts as a business support assistant with a financial perspective, enabling users to query financial data, receive contextual insights, and modify financial budgets in real time.
 
+Note that this is a hobby project intended to understand the use of retrieval augmented generation paradigms in LLM deployments and is for educational purposes.
+
 ## Project Overview
 
 This prototype prioritizes simplicity and rapid development, using:
